@@ -176,4 +176,4 @@ select G.gameId, sum(rushYards) as visitors
 from games as G, rusher as R, plays as P
 where G.gameId = P.gameId
     and P.playId = R.playId
-    and G.visitorTeamId = R.teamId
+    and G.visitorTeamId = R.teamId;
