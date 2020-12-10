@@ -516,8 +516,140 @@ def insert(_conn):
             print(e)
 
     elif (choice == '7'):
-        print()
+        print("Inserting into plays: ")
+        _playId = int(input("Enter in the playId: "))
+        _gameId = int(input("Enter in the gameId: "))
+        _playSequence = int(input("Enter in the playSequence: "))
+        _quarter = int(input("Enter in the quarter: "))
+        _possessionTeam = int(input("Enter in the possessionTeam: "))
+        _nonpossessionTeam = int(input("Enter in the nonpossessionTeam: "))
+        _playType = input("Enter in the playType: ")
+        _playType2 = input("Enter in the playType2: ")
+        _playTypeDetailed = input("Eenter in the playTypeDetailed: ")
+        _playNumberByTeam = int(input("Enter in the playNumberByTeam: "))
+        _gameClock = int(input("Enter in the gameClockSecondsExpired: "))
+        _gameClockStopped = int(input("Enter in the gameClockStoppedAfterPlay: "))
+        _down = int(input("Enter in the down: "))
+        _distance = int(input("Enter in the distance: "))
+        _distanceToGoal = int(input("Enter in the distanceToGoalPre: "))
+        _changePossession = int(input("Enter in the changePossession: "))
+        _turnover = int(input("Enter in the turnover: "))
+        _safety = int(input("Enter in the safety: "))
+        _offYds = int(input("Enter in the offensiveYards: "))
+        _netYards = int(input("Enter in the netYards: "))
+        _firstDown = int(input("Enter in the firstDown: "))
+        _effPlay = int(input("Enter in the efficientPlay: "))
+        _scorePos = int(input("Enter in the scorePossession: "))
+        _scoreNonPos = int(input("Enter in the scoreNonpossession: "))
+        _homeScore = int(input("Enter in the homeScorePre: "))
+        _visitingScore = int(input("Enter in the visitingScorePre: "))
+        _homeScorePost = int(input("Enter in the homeScorePost: "))
+        _visitingScorePost = int(input("Enter in the visitingScorePost: "))
+        _distanceGoal = int(input("Enter in the distanceToGoalPost: "))
 
+        try:
+            sql = """insert into plays values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+            args = [_playId, _gameId, _playSequence, _quarter, _possessionTeam, 
+                _nonpossessionTeam, _playType, _playType2, _playTypeDetailed, 
+                _playNumberByTeam, _gameClock, _gameClockStopped, _down, _distance,
+                _distanceToGoal, _changePossession, _turnover, _safety, _offYds, _netYards, 
+                _firstDown, _effPlay, _scorePos, _scoreNonPos, _homeScore, _visitingScore, 
+                _homeScorePost, _visitingScorePost, _distanceGoal]
+            _conn.execute(sql, args)
+        
+        except Error as e:
+            print(e)
+
+    elif (choice == '8'):
+        print("Insert into receiver: ")
+        _receiverId = int(input("Enter in the receiverId: "))
+        _playId = int(input("Enter in the playId: "))
+        _teamId = int(input("Enter in the teamId: "))
+        _playerId = int(input("Enter in the playerId: "))
+        _recPosition = input("Enter in the recPosition: ")
+        _recYards = int(input("Enter in the recYards: "))
+        _rec = int(input("Enter in the rec: "))
+        _recYac = int(input("Enter in the recYac: "))
+        _rec1down = int(input("Enter in the rec1down: "))
+        _recEnd = input("Enter in the recEnd: ")
+        _recNull = int(input("Enter in the recNull: "))
+
+        try:
+            sql = """insert into receiver values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+            args = [_receiverId, _playId, _teamId, _playerId, _recPosition, _recYards, _rec, _recYac, _rec1down, _recEnd, _recNull]
+            _conn.execute(sql, args)
+            print("Inserted successfully")
+
+        except Error as e:
+            print(e)
+
+    elif (choice == '9'):
+        print("Insert into rusher: ")
+        _rushId = int(input("Enter in the rushId: "))
+        _playId = int(input("Enter in the playId: "))
+        _teamId = int(input("Enter in the teamId: "))
+        _playerId = int(input("Enter in the playerId: "))
+        _rushPosition = input("Enter in the rushPosition: ")
+        _rushType = input("Enter in the rushType: ")
+        _rushDirection = input("Enter in the rushDirection: ")
+        _rushLandmark = input("Enter in the rushLandmark: ")
+        _rushYards = int(input("Enter in the rushYards: "))
+        _rushPrimary = int(input("Enter in the rushPrimary: "))
+        _rushTd = int(input("Enter in the rushTd: "))
+        _rushEnd = input("Enter in the rushEnd: ")
+        _rushNull = int(input("Enter in the rushNull: "))
+
+        try:
+            sql = """insert into rusher values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+            args = [_rushId, _playId, _teamId, _playerId, _rushPosition, _rushType, _rushDirection, 
+                _rushLandmark, _rushYards, _rushPrimary, _rushTd, _rushEnd, _rushNull]
+            _conn.execute(sql, args)
+            print("Inserted into rusher successfully")
+
+        except Error as e:
+            print(e)
+
+    elif (choice == '10'):
+        print("Insert into sacks: ")
+        _sackId = int(input("Enter in the sackId: "))
+        _playId = int(input("Enter in the playId: "))
+        _teamId = int(input("Enter in the teamId: "))
+        _playerId = int(input("Enter in the playerId: "))
+        _sackPosition = input("Enter in the sackPosition: ")
+        _sackYards = int(input("Enter in the sackYards: "))
+        _sackNull = int(input("Enter in the sackNull: "))
+
+        try:
+            sql = """insert into rusher values(?, ?, ?, ?, ?, ?, ?)"""
+            args = [_sackId, _playId, _teamId, _playerId, _sackPosition, 
+                _sackYards, _sackNull]
+            _conn.execute(sql, args)
+            print("Inserted into sacks successfully")
+
+        except Error as e:
+            print(e)
+
+    elif (choice == '11'):
+        print("Insert into tackles: ")
+        _tackleId = int(input("Enter in the tackleId: "))
+        _playId = int(input("Enter in the playId: "))
+        _teamId = int(input("Enter in the teamId: "))
+        _playerId = int(input("Enter in the playerId: "))
+        _tacklePosition = input("Enter in the tacklePosition: ")
+        _tackleType = input("Enter in the tackleType: ")
+        _tackleYdsScrim = int(input("Enter in the tackleYdsScrim: "))
+        _tackleNull = int(input("Enter in the tackleNull: "))
+
+        try:
+            sql = """insert into tackles values(?, ?, ?, ?, ?, ?, ?, ?)"""
+            args = [_tackleId, _playId, _teamId, _playerId, _tacklePosition, 
+                _tackleType, _tackleYdsScrim, _tackleNull]
+            _conn.execute(sql, args)
+            print("Inserted into tackles successfully")
+
+        except Error as e:
+            print(e)
 
 def update(_conn):
     try:
