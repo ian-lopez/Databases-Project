@@ -56,12 +56,332 @@ def admin(_conn):
     elif (choice == '3'):
         delete(_conn)
     elif (choice == '4'):
-        search(_conn)
+        user(_conn)
     else:
         print("Please try again with a valid choice")
 
 def user(_conn):
-    out = "Please choose a query that you would like to make: "
+    print("""What would you like to search for?
+    1: Players at a certain position
+    2: Players under 6 feet
+    3: Receivers that completed a pass
+    4: Runners with at least any number of TDs
+    5: Games with a final score difference less than one touchdown
+    6: Search for a playerId
+    7: Players that have both a rushing TD and no receiving fumbles
+    8: Players that are 30 years old
+    9: Linebackers with an interceptions and a number of sacks
+    10: Players with the most solo tackles on their team
+    11: Players with a pass defense and a sack
+    12: Teams in the playoffs for a specific season
+    13: Winners of superbowls
+    14: Players that had a forced turnover
+    15: Players with a rushing TD to the left and a catch
+    16: Players that had a TD called back by a penalty
+    17: Total rushing yeards in a game""")
+    choice = int(input())
+
+    if (choice == 1):
+        allQBs(_conn)
+    elif (choice == 2):
+        under6(_conn)
+    elif (choice == 3):
+        receiverPass(_conn)
+    elif (choice == 4):
+        runner7(_conn)
+    elif (choice == 5):
+        gameScore(_conn)
+    elif (choice == 6):
+        playerId(_conn)
+    elif (choice == 7):
+        rushNoFum(_conn)
+    elif (choice == 8):
+        yo30(_conn)
+    elif (choice == 9):
+        pickSack(_conn)
+    elif (choice == 10):
+        mostSolo(_conn)
+    elif (choice == 11):
+        passSack(_conn)
+    elif (choice == 12):
+        playoffs(_conn)
+    elif (choice == 13):
+        superbowl(_conn)
+    elif (choice == 14):
+        forcedTurn(_conn)
+    elif (choice == 15):
+        rushLeft(_conn)
+    elif (choice == 16):
+        penalty(_conn)
+    elif (choice == 17):
+        totRushYds(_conn)
+    else:
+        print("Please try again with a valid entry")
+
+def totRushYds(_conn):
+    try:
+        sql = """select G.gameId, sum(rushYards) as home
+                from games as G, rusher as R, plays as P
+                where G.gameId = P.gameId
+                    and P.playId = R.playId
+                    and G.homeTeamId = R.teamId
+                UNION
+                select G.gameId, sum(rushYards) as visitors
+                from games as G, rusher as R, plays as P
+                where G.gameId = P.gameId
+                    and P.playId = R.playId
+                    and G.visitorTeamId = R.teamId;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "|" + str(row[1]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def penalty(_conn):
+    try:
+        sql = """select playerId
+                from rusher
+                where rushPrimary = 1
+                    and rushTd = 1
+                    and rushNull = 1;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def rushLeft(_conn):
+    try:
+        sql = """select playerId
+                from receiver
+                where recNull = 0
+                    and rec = 1
+                    and recEnd = "in bounds"
+                group by playerId
+                INTERSECT
+                select playerId
+                from rusher
+                where rushDirection = "left"
+                    and rushPrimary = 1
+                    and rushTd = 1
+                    and rushNull = 0
+                group by playerId;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def forcedTurn(_conn):
+    try:
+        sql = """select playerId
+                from fumbles
+                where fumType = "forced"
+                    and fumTurnover = 1
+                    and fumNull = 0
+                group by playerId
+                UNION
+                select playerId
+                from interceptions as I
+                where I.intNull = 0
+                    and I.int = 1
+                group by playerId;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def superbowl(_conn):
+    try:
+        sql = """select season, winningTeam
+                from games
+                where seasonType = "SB";"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "|" + str(row[1]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def playoffs(_conn):
+    try:
+        _year = int(input("Enter in the year: "))
+        sql = """select homeTeamId, visitorTeamId
+                from games
+                where seasonType != "PRE" 
+                    and seasonType != "REG"
+                    and season = ?;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql, [_year])
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "|" + str(row[1]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def passSack(_conn):
+    try:
+        sql = """select P.nameFull, P.playerId
+                from players as P, passDef as I, 
+                        (SELECT playerId
+                            from sacks
+                            where sackNull = 0
+                            group by playerId
+                            having count(sackId) >= 1) as F
+                where F.playerId = I.playerId
+                    and I.passDefNull = 0
+                    and F.playerId = P.playerId
+                group by F.playerId
+                having count(I.passDefId) >= 1;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "|" + str(row[1]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def mostSolo(_conn):
+    try:
+        sql = """select T1.playerId, sum(T1.tackleYdsScrim)
+                from tackles as T1, tackles as T2
+                where T1.teamId = T2.teamId
+                    and T1.playerId != T2.playerId
+                group by T1.teamId
+                order by sum(T1.tackleYdsScrim) desc;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "|" + str(row[1]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def pickSack(_conn):
+    try:
+        _sack = int(input("Enter in the number of sacks you want to search for: "))
+        sql = """select nameFull
+                from interceptions as I, sacks as S, players as P
+                where I.playerId = S.playerId
+                    and P.playerId = I.playerId
+                    and S.sackNull = 0
+                    and sackPosition = "LB"
+                    and I.intPosition = "LB"
+                    and I.int = 1
+                    and I.intNull = 0
+                group by I.playerId
+                having count(S.sackNull) = ?;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql, [_sack])
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def yo30(_conn):
+    try:
+        sql = """select nameFull, dob
+                from players
+                where dob like "%1990";"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "|" + str(row[1]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def rushNoFum(_conn):
+    try:
+        sql = """select distinct nameFull
+                from players as P, rusher as RB, receiver as RS
+                where P.playerID = RB.playerID
+                    and RB.playerID = RS.playerID
+                    and RB.rushTD >= 1;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def playerId(_conn):
+    try:
+        _Id = int(input("Enter in the playerId you want to search for: "))
+        sql = """select *
+                from players
+                where playerId = ?;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql, [_Id])
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "|" + str(row[1]) + "|" + str(row[2]) + "|" + str(row[3]) + "|" + str(row[4]) + "|" + str(row[5]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def gameScore(_conn):
+    try:
+        sql = """select season, week, winningTeam
+                from games
+                where (homeTeamFinalScore - visitingTeamFinalScore) < 6;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "|" + str(row[1]) + "|" + str(row[2]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
 
 def insert(_conn):
     out = """Which table would you like to insert into?
@@ -213,9 +533,73 @@ def delete(_conn):
     except Error as e:
         print(e)
 
-def search(_conn):
+def allQBs(_conn):
     try:
-        sql = ""
+        _name = input("Enter in the position you want to look for: ")
+        sql = """select nameFull
+                from players
+                where position = ?;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql, [_name])
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def under6(_conn):
+    try:
+        sql = """select nameFull
+                from players
+                where heightInches <= 72;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def receiverPass(_conn):
+    try:
+        sql = """select distinct nameFull
+                from players as PL, passer as PR
+                where PR.playerId = PL.playerId
+                    and PR.passPosition = "WR"
+                    and PR.passComp = 1;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "\n"
+        print(l)
+
+    except Error as e:
+        print(e)
+
+def runner7(_conn):
+    try:
+        _num = int(input("Enter in the number of TDs: "))
+        sql = """select P.nameFull as Players
+                from players as P, rusher as RS
+                where P.playerID = RS.playerID
+                    and P.position = "RB"
+                group by P.playerID
+                having count(RS.rushTd) >= ?;"""
+        cursor = _conn.cursor()
+        cursor.execute(sql, [_num])
+        rows = cursor.fetchall()
+        l = ""
+        for row in rows:
+            l += str(row[0]) + "\n"
+        print(l)
 
     except Error as e:
         print(e)
