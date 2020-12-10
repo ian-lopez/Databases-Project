@@ -36,8 +36,10 @@ def setup(_conn):
 
     if (userType == '1'):
         admin(_conn)
-    else:
+    elif (userType == '2'):
         user(_conn)
+    else:
+        print("Please try again with a valid response")
 
 def admin(_conn):
     out = """Please enter in a choice that you want to complete:
@@ -652,15 +654,537 @@ def insert(_conn):
             print(e)
 
 def update(_conn):
-    try:
-        sql = ""
+    out = """Which table would you like to update?
+    1. fumbles
+    2. games
+    3. interceptions
+    4. passDef
+    5. passer
+    6. players
+    7. plays
+    8. receiver
+    9. rusher
+    10. sacks
+    11. tackles"""
 
-    except Error as e:
-        print(e)
+    print(out)
+    choice = input()
+
+    if (choice == "1"):
+        updateFumbles(_conn)
+    elif (choice == '2'):
+        updateGames(_conn)
+    elif (choice == '3'):
+        updateInterceptions(_conn)
+    # elif (choice == '4'):
+    #     updatePassDef(_conn)
+    # elif (choice == '5'):
+    #     updatePasser(_conn)
+    elif (choice == '6'):
+        updatePlayers(_conn)
+    # elif (choice == '7'):
+    #     updatePlays(_conn)
+    # elif (choice == '8'):
+    #     updateReceiver(_conn)
+    # elif (choice == '9'):
+    #     updateRusher(_conn)
+    # elif (choice == '10'):
+    #     updateSacks(_conn)
+    # elif (choice == '11'):
+    #     updateTackles(_conn)
+    else:
+        print("Please try again with a valid choice")
 
 def delete(_conn):
+    out = """Which table would you like to delete from?
+    1. fumbles
+    2. games
+    3. interceptions
+    4. passDef
+    5. passer
+    6. players
+    7. plays
+    8. receiver
+    9. rusher
+    10. sacks
+    11. tackles"""
+
+    print(out)
+    choice = input()
+
+    if (choice == "1"):
+        deleteFumble(_conn)
+    elif (choice == '2'):
+        deleteGame(_conn)
+    elif (choice == '3'):
+        deleteInterception(_conn)
+    # elif (choice == '4'):
+    #     deletePassDef(_conn)
+    # elif (choice == '5'):
+    #     deletePasser(_conn)
+    elif (choice == '6'):
+        deletePlayer(_conn)
+    # elif (choice == '7'):
+    #     deletePlay(_conn)
+    # elif (choice == '8'):
+    #     deleteReceiver(_conn)
+    # elif (choice == '9'):
+    #     deleteRusher(_conn)
+    # elif (choice == '10'):
+    #     deleteSack(_conn)
+    # elif (choice == '11'):
+    #     deleteTackle(_conn)
+    else:
+        print("Please try again with a valid choice")
+
+def updateFumbles(_conn):
+    _fumId = int(input("Enter the fumble's ID you want to update: "))
+
+    out = """What do you want to update? 
+    1. Play ID
+    2. Team ID
+    3. Player ID
+    4. Fumble Position
+    5. Fumble Type
+    6. Fumble OOB
+    7. Fumble Turnover
+    8. Fumble Null"""
+
+    print(out)
+    choice = input()
+
+    if (choice == "1"):
+        _playId = int(input("Enter in the new play ID: "))
+
+        try:
+            sql = """update fumbles 
+                        set playId = ? 
+                        where fumId = ?"""
+            args = [_playId, _fumId]
+
+            _conn.execute(sql, args)
+            print("Updated play ID successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '2'):
+        _teamId = int(input("Enter in the new team ID: "))
+
+        try:
+            sql = """update fumbles set teamId = ? where fumId = ?"""
+            args = [_teamId, _fumId]
+
+            _conn.execute(sql, args)
+            print("Updated team ID successfully")
+
+        except Error as e:
+            print(e)
+
+    elif (choice == '3'):
+        _playerId = int(input("Enter in the new player ID: "))
+
+        try:
+            sql = """update fumbles set playerId = ? where fumId = ?"""
+            args = [_playerId, _fumId]
+
+            _conn.execute(sql, args)
+            print("Updated player ID successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '4'):
+        _fumPosition = input("Enter in the new fumble position: ")
+
+        try:
+            sql = """update fumbles set fumPosition = ? where fumId = ?"""
+            args = [_fumPosition, _fumId]
+
+            _conn.execute(sql, args)
+            print("Updated fumble position successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '5'):
+        _fumType = input("Enter in the new fumble type: ")
+
+        try:
+            sql = """update fumbles set fumType = ? where fumId = ?"""
+            args = [_fumType, _fumId]
+
+            _conn.execute(sql, args)
+            print("Updated fumble type successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '6'):
+        _fumOOB = int(input("Enter in the new fumble OOB: "))
+
+        try:
+            sql = """update fumbles set fumOOB = ? where fumId = ?"""
+            args = [_fumOOB, _fumId]
+
+            _conn.execute(sql, args)
+            print("Updated fumble OOB successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '7'):
+        _fumTurnover = int(input("Enter in the new fumble turnover: "))
+
+        try:
+            sql = """update fumbles set fumTurnover = ? where fumId = ?"""
+            args = [_fumTurnover, _fumId]
+
+            _conn.execute(sql, args)
+            print("Updated fumble turnover successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '8'):   
+        _fumNull = int(input("Enter in the new fumble null: "))
+
+        try:
+            sql = """update fumbles set fumNull = ? where fumId = ?"""
+            args = [_fumNull, _fumId]
+
+            _conn.execute(sql, args)
+            print("Updated fumble null successfully")
+
+        except Error as e:
+            print(e)
+    else:
+        print("Please try again with a valid choice")
+
+def updateGames(_conn):
+    _gameId = int(input("Enter the game's ID you want to update: "))
+
+    out = """What do you want to update? 
+    1. Season
+    2. Week
+    3. Home Team ID
+    4. Visitor Team ID
+    5. Season Type
+    6. Week Name Abbreviation
+    7. Home Team Final Score
+    8. Visiting Team Final Score
+    9. Winning Team"""
+
+    print(out)
+    choice = input()
+
+    if (choice == "1"):
+        _season = int(input("Enter in the new season: "))
+        try:
+            sql = """update games 
+                        set season = ? 
+                        where gameId = ?"""
+            args = [_season, _gameId]
+            _conn.execute(sql, args)
+            print("Updated season successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '2'):
+        _week = int(input("Enter in the new week: "))
+        try:
+            sql = """update games set week = ? where gameId = ?"""
+            args = [_week, _gameId]
+            _conn.execute(sql, args)
+            print("Updated season successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '3'):
+        _homeTeamId = int(input("Enter in the new home team ID: "))
+
+        try:
+            sql = """update games set homeTeamId = ? where gameId = ?"""
+            args = [_homeTeamId, _gameId]
+
+            _conn.execute(sql, args)
+            print("Updated home team ID successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '4'):
+        _visitorTeamId = int(input("Enter in the new visiting team ID: "))
+
+        try:
+            sql = """update games set visitorTeamId = ? where gameId = ?"""
+            args = [_visitorTeamId, _gameId]
+
+            _conn.execute(sql, args)
+            print("Updated players weight successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '5'):
+        _seasonType = input("Enter in the new season type: ")
+
+        try:
+            sql = """update games set seasonType = ? where gameId = ?"""
+            args = [_seasonType, _gameId]
+
+            _conn.execute(sql, args)
+            print("Updated season type successfully")
+
+        except Error as e:
+            print(e)
+
+    elif(choice == '6'):
+        _weekNameAbbr = input("Enter in the new week name abbreviation: ")
+
+        try:
+            sql = """update games set weekNameAbbr = ? where gameId = ?"""
+            args = [_weekNameAbbr, _gameId]
+
+            _conn.execute(sql, args)
+            print("Updated week name abbreviation successfully")
+
+        except Error as e:
+            print(e)
+    elif(choice == '7'):
+        _homeTeamFinalScore = int(input("Enter in the new home team final score: "))
+
+        try:
+            sql = """update games set homeTeamFinalScore = ? where gameId = ?"""
+            args = [_homeTeamFinalScore, _gameId]
+
+            _conn.execute(sql, args)
+            print("Updated home team final score successfully")
+
+        except Error as e:
+            print(e)
+    elif(choice == '8'):
+        _visitingTeamFinalScore = int(input("Enter in the new visiting team final score: "))
+
+        try:
+            sql = """update games set visitingTeamFinalScore = ? where gameId = ?"""
+            args = [_visitingTeamFinalScore, _gameId]
+
+            _conn.execute(sql, args)
+            print("Updated visiting team final score successfully")
+
+        except Error as e:
+            print(e)
+    elif(choice == '9'):
+        _winningTeam = int(input("Enter in the new winning team: "))
+
+        try:
+            sql = """update players set winningTeam = ? where gameId = ?"""
+            args = [_winningTeam, _gameId]
+
+            _conn.execute(sql, args)
+            print("Updated winning team successfully")
+
+        except Error as e:
+            print(e)
+    else:
+        print("Please try again with a valid choice")
+
+def updateInterceptions(_conn):
+    _interceptionId = int(input("Enter the interception's ID you want to update: "))
+
+    out = """What do you want to update? 
+    1. Play ID
+    2. Team ID
+    3. Player ID
+    4. Interception Position
+    5. Int
+    6. Interception Yards
+    7. Interception Touchdown
+    8. Interception Null"""
+
+    print(out)
+    choice = input()
+
+    if (choice == "1"):
+        _playId = int(input("Enter in the new play ID: "))
+
+        try:
+            sql = """update interceptions 
+                        set playId = ? 
+                        where interceptionId = ?"""
+            args = [_playId, _interceptionId]
+
+            _conn.execute(sql, args)
+            print("Updated play ID successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '2'):
+        _teamId = int(input("Enter in the new team ID: "))
+
+        try:
+            sql = """update interceptions set teamId = ? where interceptionId = ?"""
+            args = [_teamId, _interceptionId]
+
+            _conn.execute(sql, args)
+            print("Updated team ID successfully")
+
+        except Error as e:
+            print(e)
+
+    elif (choice == '3'):
+        _playerId = int(input("Enter in the new player ID: "))
+
+        try:
+            sql = """update interceptions set playerId = ? where interceptionId = ?"""
+            args = [_playerId, _interceptionId]
+
+            _conn.execute(sql, args)
+            print("Updated player ID successfully")
+
+        except Error as e:
+            print(e)
+
+    elif (choice == '4'):
+        _intPosition = input("Enter in the new interception position: ")
+
+        try:
+            sql = """update interceptions set intPosition = ? where interceptionId = ?"""
+            args = [_intPosition, _interceptionId]
+
+            _conn.execute(sql, args)
+            print("Updated interception position successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '5'):
+        _int = int(input("Enter in the new int: "))
+
+        try:
+            sql = """update interceptions set int = ? where interceptionId = ?"""
+            args = [_int, _interceptionId]
+
+            _conn.execute(sql, args)
+            print("Updated int successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '6'):
+        _intYards = int(input("Enter in the new interception yards: "))
+
+        try:
+            sql = """update interceptions set intYards = ? where interceptionId = ?"""
+            args = [_intYards, _interceptionId]
+
+            _conn.execute(sql, args)
+            print("Updated interception yards successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '7'):
+        _intTd = int(input("Enter in the new interception touchdown: "))
+
+        try:
+            sql = """update interceptions set intTd = ? where interceptionId = ?"""
+            args = [_intTd, _interceptionId]
+
+            _conn.execute(sql, args)
+            print("Updated interception touchdown successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '8'):
+        _intNull = int(input("Enter in the new interception null: "))
+
+        try:
+            sql = """update interceptions set intNull = ? where interceptionId = ?"""
+            args = [_intNull, _interceptionId]
+
+            _conn.execute(sql, args)
+            print("Updated interception null successfully")
+
+        except Error as e:
+            print(e)
+
+def updatePlayers(_conn):
+    _playerId = int(input("Enter the player's ID you want to update: "))
+    
+    out = """What do you want to update? 
+    1. Name
+    2. Position
+    3. Height
+    4. Weight
+    5. Date of birth"""
+
+    print(out)
+    choice = input()
+
+    if (choice == "1"):
+        _nameFull = input("Enter in the new nameFull: ")
+
+        try:
+            sql = """update players 
+                        set nameFull = ? 
+                        where playerId = ?"""
+            args = [_nameFull, _playerId]
+
+            _conn.execute(sql, args)
+            print("Updated players name successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '2'):
+        _position = input("Enter in the new position: ")
+
+        try:
+            sql = """update players set position = ? where playerId = ?"""
+            args = [_position, _playerId]
+
+            _conn.execute(sql, args)
+            print("Updated players position successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '3'):
+        _heightInches = int(input("Enter in the new height: "))
+
+        try:
+            sql = """update players set heightInches = ? where playerId = ?"""
+            args = [_heightInches, _playerId]
+
+            _conn.execute(sql, args)
+            print("Updated players height successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '4'):
+        _weight = int(input("Enter in the new weight: "))
+
+        try:
+            sql = """update players set weight = ? where playerId = ?"""
+            args = [_weight, _playerId]
+
+            _conn.execute(sql, args)
+            print("Updated players weight successfully")
+
+        except Error as e:
+            print(e)
+    elif (choice == '5'):
+        _dob = input("Enter in the new date of birth: ")
+
+        try:
+            sql = """update players set dob = ? where playerId = ?"""
+            args = [_dob, _playerId]
+
+            _conn.execute(sql, args)
+            print("Updated players date of birth successfully")
+
+        except Error as e:
+            print(e)
+
+    else:
+        print("Please try again with a valid choice")
+
+def deletePlayer(_conn):
+    _playerId = input("Enter the playerId of the player you want to delete: ")
+
     try:
-        sql = ""
+        sql = """delete from players where playerId = ?"""
+        _conn.execute(sql, [_playerId])
+        print("Deleted player successfully")
 
     except Error as e:
         print(e)
@@ -745,7 +1269,6 @@ def main():
         setup(conn)
 
     closeConnection(conn, database)
-
 
 if __name__ == '__main__':
     main()
