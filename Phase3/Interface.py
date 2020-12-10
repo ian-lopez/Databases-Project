@@ -718,24 +718,124 @@ def delete(_conn):
         deleteGame(_conn)
     elif (choice == '3'):
         deleteInterception(_conn)
-    # elif (choice == '4'):
-    #     deletePassDef(_conn)
-    # elif (choice == '5'):
-    #     deletePasser(_conn)
+    elif (choice == '4'):
+        deletePassDef(_conn)
+    elif (choice == '5'):
+        deletePasser(_conn)
     elif (choice == '6'):
         deletePlayer(_conn)
-    # elif (choice == '7'):
-    #     deletePlay(_conn)
-    # elif (choice == '8'):
-    #     deleteReceiver(_conn)
-    # elif (choice == '9'):
-    #     deleteRusher(_conn)
-    # elif (choice == '10'):
-    #     deleteSack(_conn)
-    # elif (choice == '11'):
-    #     deleteTackle(_conn)
+    elif (choice == '7'):
+        deletePlay(_conn)
+    elif (choice == '8'):
+        deleteReceiver(_conn)
+    elif (choice == '9'):
+        deleteRusher(_conn)
+    elif (choice == '10'):
+        deleteSack(_conn)
+    elif (choice == '11'):
+        deleteTackle(_conn)
     else:
         print("Please try again with a valid choice")
+
+def deleteFumble(_conn):
+    _fumId = int(input("Enter in the fumId: "))
+    try:
+        sql = "delete from fumbles where fumId = ?"
+        _conn.execute(sql, [_fumId])
+        print("Deleted from fumbles successfully")
+    
+    except Error as e:
+        print(e)
+
+def deleteGame(_conn):
+    _gameId = int(input("Enter in the gameId: "))
+    try:
+        sql = "delete from games where gameId = ?"
+        _conn.execute(sql, [_gameId])
+        print("Deleted from games successfully")
+    
+    except Error as e:
+        print(e)
+
+def deleteInterception(_conn):
+    _interceptionId = int(input("Enter in the interceptionId: "))
+    try:
+        sql = "delete from interceptions where interceptionsId = ?"
+        _conn.execute(sql, [_interceptionId])
+        print("Deleted from interceptions successfully")
+    
+    except Error as e:
+        print(e)
+
+def deletePassDef(_conn):
+    _passDefId = int(input("Enter in the passDefId: "))
+    try:
+        sql = "delete from passDef where passDefId = ?"
+        _conn.execute(sql, [_passDefId])
+        print("Deleted from passDef successfully")
+    
+    except Error as e:
+        print(e)
+
+def deletePasser(_conn):
+    _passId = int(input("Enter in the passId: "))
+    try:
+        sql = "delete from passer where passId = ?"
+        _conn.execute(sql, [_passId])
+        print("Deleted from passer successfully")
+    
+    except Error as e:
+        print(e)
+
+def deletePlay(_conn):
+    _playId = int(input("Enter in the playId: "))
+    try:
+        sql = "delete from plays where playId = ?"
+        _conn.execute(sql, [_playId])
+        print("Deleted from plays successfully")
+    
+    except Error as e:
+        print(e)
+
+def deleteReceiver(_conn):
+    _receiverId = int(input("Enter in the receiverId: "))
+    try:
+        sql = "delete from receiver where receiverId = ?"
+        _conn.execute(sql, [_receiverId])
+        print("Deleted from receiver successfully")
+    
+    except Error as e:
+        print(e)
+
+def deleteRusher(_conn):
+    _rushId = int(input("Enter in the rushId: "))
+    try:
+        sql = "delete from rusher where rushId = ?"
+        _conn.execute(sql, [_rushId])
+        print("Deleted from rusher successfully")
+    
+    except Error as e:
+        print(e)
+
+def deleteSack(_conn):
+    _sackId = int(input("Enter in the sackId: "))
+    try:
+        sql = "delete from sacks where sackId = ?"
+        _conn.execute(sql, [_sackId])
+        print("Deleted from sacks successfully")
+    
+    except Error as e:
+        print(e)
+
+def deleteTackle(_conn):
+    _tackleId = int(input("Enter in the tackleId: "))
+    try:
+        sql = "delete from tackles where fumId = ?"
+        _conn.execute(sql, [_tackleId])
+        print("Deleted from tackles successfully")
+    
+    except Error as e:
+        print(e)
 
 def updateFumbles(_conn):
     _fumId = int(input("Enter the fumble's ID you want to update: "))
